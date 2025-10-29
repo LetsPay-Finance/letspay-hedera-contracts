@@ -73,6 +73,15 @@ Both scripts use `HEDERA_RPC_URL` and `HEDERA_PRIVATE_KEY`. Update the hardcoded
 - `contracts/LetsPayHBAR_V1_UUPS.sol`: UUPS implementation with escrow, credit assignment, and repayments. Uses an `initializer` and `onlyProxy` guard.
 - `contracts/Proxy.sol`: Minimal `ERC1967Proxy` storing implementation at the EIP-1967 slot and delegating all calls.
 
+#### New draft contracts
+
+- `contracts/MerchantRegistry.sol`: Owner-managed registry for merchants with `register`, `updatePayout`, `updateMetadata`, and `unregister`. Stores payout address, name, and `metadataURI`. Stand-alone with simple `initialize(owner)`.
+- `contracts/FeeManager.sol`: Owner-managed platform fee settings. Stores `feeRecipient` and `feeBps` (out of 10_000). Provides `computeFee(amount)` and `splitAmount(amount)` helpers. Stand-alone with `initialize(owner, recipient, bps)`.
+
+Intended integration (future):
+- Validate merchants in `LetsPayHBAR_V1_UUPS.createEscrow` via `MerchantRegistry.isRegistered(merchant)` and pay to `MerchantRegistry.payoutOf(merchant)`.
+- If platform fees are desired, use `FeeManager.splitAmount(total)` to route `(fee -> feeRecipient)` and `(net -> merchant)`.
+
 ### Repository layout
 
 - `ignition/modules/LetsPayHBAR.ts`: Deployment of V1 + proxy + ABI attachment
