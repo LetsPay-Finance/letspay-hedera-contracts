@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
+    "deploy:guided": "tsx scripts/deploy-letspay.ts",
     "deploy:hedera:testnet": "hardhat ignition deploy --network hederaTestnet ignition/modules/LetsPayHBAR.ts",
+    "deploy:hedera:mainnet": "hardhat ignition deploy --network hederaMainnet ignition/modules/LetsPayHBAR.ts",
     "fund:proxy": "tsx scripts/fundproxy.ts",
     "check:balance": "tsx scripts/checkbalance.ts"
   },
