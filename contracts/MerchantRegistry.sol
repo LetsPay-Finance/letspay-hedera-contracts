@@ -208,6 +208,40 @@ contract MerchantRegistry {
         }
     }
 
+    function getRegisteredMerchants(uint256 offset, uint256 limit)
+        external
+        view
+        returns (address[] memory merchants, uint256 total)
+    {
+        uint256 registeredCount = 0;
+        for (uint256 i = 0; i < _merchantList.length; i++) {
+            if (_merchants[_merchantList[i]].registered) {
+                registeredCount++;
+            }
+        }
+        total = registeredCount;
+        
+        if (offset >= total || total == 0) {
+            return (new address[](0), total);
+        }
+        
+        uint256 collected = 0;
+        uint256 needed = limit;
+        if (offset + limit > total) {
+            needed = total - offset;
+        }
+        merchants = new address[](needed);
+        
+        for (uint256 i = 0; i < _merchantList.length && collected < needed; i++) {
+            if (_merchants[_merchantList[i]].registered) {
+                if (collected >= offset) {
+                    merchants[collected - offset] = _merchantList[i];
+                }
+                collected++;
+            }
+        }
+    }
+
     function getAllMerchants() external view returns (address[] memory) {
         return _merchantList;
     }
