@@ -90,6 +90,7 @@ contract LetsPayHBAR_V1_UUPS {
 
     mapping(uint256 => Escrow) public escrows;
     mapping(uint256 => mapping(address => bool)) public accepted;
+    mapping(uint256 => mapping(address => bool)) public viewed;
 
     event SignedUp(address indexed user, uint256 amount);
     event EscrowCreated(uint256 indexed id, address indexed host, address indexed merchant, uint256 total);
@@ -98,6 +99,7 @@ contract LetsPayHBAR_V1_UUPS {
     event EscrowSettled(uint256 indexed id);
     event ContractFunded(address indexed from, uint256 amount);
     event CreditRepaid(address indexed user, uint256 amount);
+    event EscrowViewed(uint256 indexed id, address indexed participant);
 
     function initialize(address owner_) external initializer onlyProxy {
         require(owner_ != address(0), "owner=0");
@@ -231,6 +233,16 @@ contract LetsPayHBAR_V1_UUPS {
         require(msg.value > 0, "no value");
         credit[msg.sender] += msg.value;
         emit CreditRepaid(msg.sender, msg.value);
+    }
+
+    function viewEscrow(uint256 escrowId) external {
+        Escrow storage e = escrows[escrowId];
+        require(e.status == EscrowStatus.PAID, "not payable");
+        uint idx = type(uint).max; for (uint i = 0; i < e.participants.length; i++) { if (e.participants[i] == msg.sender) { idx = i; break; } }
+        require(idx != type(uint).max, "not participant");
+        require(!viewed[escrowId][msg.sender], "already viewed");
+        viewed[escrowId][msg.sender] = true;
+        emit EscrowViewed(escrowId, msg.sender);
     }
 
     receive() external payable {}
