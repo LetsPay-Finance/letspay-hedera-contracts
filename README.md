@@ -22,7 +22,14 @@ Set the following variables in your shell or a local `.env` you source before co
 export HEDERA_NETWORK=testnet # or mainnet for scripts
 export HEDERA_RPC_URL=https://testnet.hashio.io/api
 export HEDERA_PRIVATE_KEY=0xYOUR_EVM_PRIVATE_KEY
-export LETSPAY_PROXY_ADDRESS=0xPROXY_ONCE_DEPLOYED
+# LetsPayHBAR proxy (ERC1967Proxy)
+export LETSPAY_PROXY_ADDRESS=0xLETSPAY_HBAR_PROXY_ONCE_DEPLOYED
+
+# Bonding-curve proxy (BondingCurveProxy.sol) — separate from LETSPAY_PROXY_ADDRESS
+export BONDING_CURVE_PROXY_ADDRESS=0xBONDING_CURVE_PROXY_ONCE_DEPLOYED
+
+# LTP token (optional; defaults exist in scripts)
+export LTP_TOKEN_ADDRESS=0xLTP_TOKEN_ADDRESS
 # Optional utility for fundproxy.ts
 export LETSPAY_FUND_AMOUNT=10
 ```
@@ -117,6 +124,13 @@ npx tsx scripts/checkbalance.ts
 ```
 
 Both scripts read `HEDERA_NETWORK` to pick the right chain and expect the corresponding RPC/private key plus `LETSPAY_PROXY_ADDRESS` (and optional `LETSPAY_FUND_AMOUNT`) to be exported before running.
+
+### Bonding curve (separate proxy)
+
+Bonding curve lives behind its own proxy contract `contracts/BondingCurveProxy.sol`. Scripts that interact with the bonding curve use:
+
+- `BONDING_CURVE_PROXY_ADDRESS` (the BondingCurveProxy address)
+- `LTP_TOKEN_ADDRESS` (the LTP token address)
 
 ### Contracts
 
