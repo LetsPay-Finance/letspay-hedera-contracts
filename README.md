@@ -30,8 +30,6 @@ export BONDING_CURVE_PROXY_ADDRESS=0xBONDING_CURVE_PROXY_ONCE_DEPLOYED
 
 # LTP token (optional; defaults exist in scripts)
 export LTP_TOKEN_ADDRESS=0xLTP_TOKEN_ADDRESS
-# Optional utility for fundproxy.ts
-export LETSPAY_FUND_AMOUNT=10
 ```
 
 For Hedera mainnet deployments, also set the dedicated RPC/key pair (kept separate so you can keep both funded):
@@ -111,19 +109,13 @@ npx hardhat ignition deploy --network hederaMainnet ignition/modules/LetsPayHBAR
 
 ### Interact
 
-Fund the proxy with HBAR so the app can pay merchants:
-
-```shell
-npx tsx scripts/fundproxy.ts
-```
-
 Check balance of the proxy:
 
 ```shell
 npx tsx scripts/checkbalance.ts
 ```
 
-Both scripts read `HEDERA_NETWORK` to pick the right chain and expect the corresponding RPC/private key plus `LETSPAY_PROXY_ADDRESS` (and optional `LETSPAY_FUND_AMOUNT`) to be exported before running.
+The script reads `HEDERA_NETWORK` to pick the right chain and expects the corresponding RPC/private key plus `LETSPAY_PROXY_ADDRESS` to be exported before running.
 
 ### Bonding curve (separate proxy)
 
@@ -149,6 +141,6 @@ Intended integration (future):
 ### Repository layout
 
 - `ignition/modules/LetsPayHBAR.ts`: Deployment of V1 + proxy + ABI attachment
-- `scripts/fundproxy.ts`, `scripts/checkbalance.ts`: Basic Hedera interactions via `viem`
+- `scripts/checkbalance.ts`: Basic Hedera balance check via `viem`
 
 Removed example content (OP sample, V2 upgrade scaffold, sample tests) to keep the repository focused on Hedera V1 deployment and use.
