@@ -9,7 +9,6 @@
     "deploy:bonding-curve:testnet": "hardhat ignition deploy --network hederaTestnet ignition/modules/LetsPayBondingCurve.ts",
     "deploy:bonding-curve:mainnet": "hardhat ignition deploy --network hederaMainnet ignition/modules/LetsPayBondingCurve.ts",
     "deploy:bonding-curve:proxy": "tsx scripts/deploy-bonding-curve-proxy.ts",
-    "fund:proxy": "tsx scripts/fundproxy.ts",
     "check:balance": "tsx scripts/checkbalance.ts"
   },
   "devDependencies": {
